@@ -17,10 +17,10 @@ class SimpleMongoReader(BaseReader):
     """
 
     def __init__(
-        self,
-        host: Optional[str] = None,
-        port: Optional[int] = None,
-        uri: Optional[str] = None,
+            self,
+            host: Optional[str] = None,
+            port: Optional[int] = None,
+            uri: Optional[str] = None,
     ) -> None:
         """Initialize with parameters."""
         try:
@@ -47,14 +47,14 @@ class SimpleMongoReader(BaseReader):
         return result
 
     def lazy_load_data(
-        self,
-        db_name: str,
-        collection_name: str,
-        field_names: List[str] = ["text"],
-        separator: str = "",
-        query_dict: Optional[Dict] = None,
-        max_docs: int = 0,
-        metadata_names: Optional[List[str]] = None,
+            self,
+            db_name: str,
+            collection_name: str,
+            field_names: List[str] = ["text"],
+            separator: str = "",
+            query_dict: Optional[Dict] = None,
+            max_docs: int = 0,
+            metadata_names: Optional[List[str]] = None,
     ) -> Iterable[Document]:
         """Load data from the input directory.
 
@@ -96,7 +96,7 @@ class SimpleMongoReader(BaseReader):
             text = separator.join(texts)
 
             if metadata_names is None:
-                yield Document(text=text)
+                yield Document(text=text, id_=str(item["_id"]))
             else:
                 try:
                     metadata = {name: item.get(name) for name in metadata_names}
@@ -104,4 +104,4 @@ class SimpleMongoReader(BaseReader):
                     raise ValueError(
                         f"{err.args[0]} field not found in Mongo document."
                     ) from err
-                yield Document(text=text, metadata=metadata)
+                yield Document(text=text, id_=str(item["_id"]), metadata=metadata)
